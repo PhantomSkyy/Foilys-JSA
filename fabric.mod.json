@@ -1,0 +1,13 @@
+{
+    "schemaVersion": 1,
+    "authors": [
+        "Foily and Semper"
+    ],
+    "environment": "*",
+    "id": "fs_jsa",
+    "version": "1.0.0",
+    "name": "Foily's Justice Society of America",
+    "description": "This pack will add the Justice Society of America to Palladium!",
+    "icon": "logo.png",
+    "license": "All rights reserved"
+}

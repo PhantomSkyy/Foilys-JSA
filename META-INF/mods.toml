@@ -1,0 +1,21 @@
+modLoader="lowcodefml"
+showAsResourcePack = false
+loaderVersion="[47,)"
+license="All Rights Reserved"
+
+[[mods]]
+modId="fs_jsa"
+version="0.0.1"
+logoFile = "logo.png"
+logoBlur = false
+displayName="Foily's Justice Society of America"
+description='''
+This pack will add the Justice Society of America to Palladium!
+'''
+
+[[dependencies.fs_jsa]]
+modId = "palladium"
+mandatory = true
+versionRange = "[4.5.9,)"
+ordering = "NONE"
+side = "BOTH"
