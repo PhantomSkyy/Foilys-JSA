@@ -1,0 +1,18 @@
+{
+    "armor_material": "minecraft:diamond",
+    "tooltip": [
+        "Modern Age Member"
+    ],
+    "chest": {
+        "item_name": "captain_marvel_chestplate",
+        "armor_renderer": "fs_jsa:captain_marvel/chestplate"
+    },
+    "legs": {
+        "item_name": "captain_marvel_leggings",
+        "armor_renderer": "fs_jsa:captain_marvel/leggings"
+    },
+    "feet": {
+        "item_name": "captain_marvel_boots",
+        "armor_renderer": "fs_jsa:captain_marvel/boots"
+    }
+}

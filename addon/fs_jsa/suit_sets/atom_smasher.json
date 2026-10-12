@@ -1,0 +1,24 @@
+{
+    "armor_material": "minecraft:diamond",
+    "tooltip": [
+        "Modern Age Member"
+    ],
+    "chest": {
+        "item_name": "atom_smasher_chestplate",
+        "armor_renderer": "fs_jsa:atom_smasher/chestplate"
+    },
+    "legs": {
+        "item_name": "atom_smasher_leggings",
+        "armor_renderer": "fs_jsa:atom_smasher/leggings"
+    },
+    "feet": {
+        "item_name": "atom_smasher_boots",
+        "armor_renderer": "fs_jsa:atom_smasher/boots"
+    },
+    "head": {
+        "item_name": "atom_smasher_helmet",
+        "openable": true,
+        "opening_time": 1,
+        "armor_renderer": "fs_jsa:atom_smasher/helmet"
+    }
+}

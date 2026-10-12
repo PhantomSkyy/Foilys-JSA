@@ -1,0 +1,21 @@
+{
+    "icon": "fs_jsa:wildcat_chestplate",
+    "items": [
+        "fs_jsa:wildcat_helmet",
+        "fs_jsa:wildcat_chestplate",
+        "fs_jsa:wildcat_leggings",
+        "fs_jsa:wildcat_boots",
+        "fs_jsa:atom_helmet",
+        "fs_jsa:atom_chestplate",
+        "fs_jsa:atom_leggings",
+        "fs_jsa:atom_boots",
+        "fs_jsa:hourman_helmet",
+        "fs_jsa:hourman_chestplate",
+        "fs_jsa:hourman_leggings",
+        "fs_jsa:hourman_boots",
+        "fs_jsa:doctor_mid-nite_helmet",
+        "fs_jsa:doctor_mid-nite_chestplate",
+        "fs_jsa:doctor_mid-nite_leggings",
+        "fs_jsa:doctor_mid-nite_boots"
+    ]
+}

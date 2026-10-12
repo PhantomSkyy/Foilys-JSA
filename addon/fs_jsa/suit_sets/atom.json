@@ -1,0 +1,24 @@
+{
+    "armor_material": "minecraft:diamond",
+    "tooltip": [
+        "Golden Age Member"
+    ],
+    "chest": {
+        "item_name": "atom_chestplate",
+        "armor_renderer": "fs_jsa:atom/chestplate"
+    },
+    "legs": {
+        "item_name": "atom_leggings",
+        "armor_renderer": "fs_jsa:atom/leggings"
+    },
+    "feet": {
+        "item_name": "atom_boots",
+        "armor_renderer": "fs_jsa:atom/boots"
+    },
+    "head": {
+        "item_name": "atom_helmet",
+        "openable": true,
+        "opening_time": 1,
+        "armor_renderer": "fs_jsa:atom/helmet"
+    }
+}
