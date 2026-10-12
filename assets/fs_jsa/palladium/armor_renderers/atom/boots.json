@@ -1,0 +1,4 @@
+{
+    "textures": "fs_jsa:textures/suits/atom/boots.png",
+    "model_layers": "palladium:humanoid#suit"
+}

@@ -1,0 +1,5 @@
+{
+    "textures": "fs_jsa:textures/suits/hourman/boots.png",
+    "hide_second_layer": true,
+    "model_layers": "palladium:humanoid#tight_suit"
+}

@@ -1,0 +1,24 @@
+{
+    "armor_material": "minecraft:diamond",
+    "tooltip": [
+        "Golden Age Member"
+    ],
+    "chest": {
+        "item_name": "wildcat_chestplate",
+        "armor_renderer": "fs_jsa:wildcat/chestplate"
+    },
+    "legs": {
+        "item_name": "wildcat_leggings",
+        "armor_renderer": "fs_jsa:wildcat/leggings"
+    },
+    "feet": {
+        "item_name": "wildcat_boots",
+        "armor_renderer": "fs_jsa:wildcat/boots"
+    },
+    "head": {
+        "item_name": "wildcat_helmet",
+        "openable": true,
+        "opening_time": 1,
+        "armor_renderer": "fs_jsa:wildcat/helmet"
+    }
+}
