@@ -3,7 +3,7 @@
         "id": "fs_jsa",
         "pack_format": 15,
         "description": "This pack will add the Justice Society of America to Palladium!",
-        "version": "1.0.0"
+        "version": "0.0.1"
     },
     "dependencies": {
         "common": {},

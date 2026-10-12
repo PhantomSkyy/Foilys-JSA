@@ -1,0 +1,133 @@
+{
+    "name": "Wildcat",
+    "persistent_data": true,
+    "background": "minecraft:textures/block/black_wool.png",
+    "icon": "minecraft:skeleton_skull",
+    "gui_display_type": "tree",
+    "abilities": {
+        "strength I": {
+            "type": "palladium:attribute_modifier",
+            "description": "Increases melee damage.",
+            "attribute": "minecraft:generic.attack_damage",
+            "icon": "minecraft:iron_sword",
+            "operation": 0,
+            "amount": 3.0,
+            "uuid": "d5195501-5975-4cce-a9f3-2cf2c9383573",
+            "gui_position": [-3, -1]
+        },
+        "strength II":{
+            "type": "palladium:attribute_modifier",
+            "description": "Increases melee damage further.",
+            "attribute": "minecraft:generic.attack_damage",
+            "icon": "minecraft:iron_sword",
+            "operation": 0,
+            "amount": 3.0,
+            "uuid": "d5195501-5975-4cce-a9f3-2cf2c9383573",
+            "gui_position": [-3, -1.5]
+        },
+        "strength III":{
+            "type": "palladium:attribute_modifier",
+            "description": "Increases melee damage even further.",
+            "attribute": "minecraft:generic.attack_damage",
+            "icon": "minecraft:iron_sword",
+            "operation": 0,
+            "amount": 3.0,
+            "uuid": "d5195501-5975-4cce-a9f3-2cf2c9383573",
+            "gui_position": [-3, -2]
+        },
+        "health I": {
+            "type": "palladium:attribute_modifier",
+            "description": "Increases health.",
+            "attribute": "minecraft:generic.max_health",
+            "icon": "minecraft:apple",
+            "operation": 0,
+            "amount": 3.0,
+            "uuid": "d5195501-5975-4cce-a9f3-2cf2c9383573",
+            "gui_position": [-4, -1]
+        },
+        "health II":{
+            "type": "palladium:attribute_modifier",
+            "description": "Increases health further.",
+            "attribute": "minecraft:generic.max_health",
+            "icon": "minecraft:apple",
+            "operation": 0,
+            "amount": 3.0,
+            "uuid": "d5195501-5975-4cce-a9f3-2cf2c9383573",
+            "gui_position": [-4, -1.5]
+        },
+        "health III":{
+            "type": "palladium:attribute_modifier",
+            "description": "Increases health even further.",
+            "attribute": "minecraft:generic.max_health",
+            "icon": "minecraft:apple",
+            "operation": 0,
+            "amount": 4.0,
+            "uuid": "d5195501-5975-4cce-a9f3-2cf2c9383573",
+            "gui_position": [-4, -2]
+        },
+        "Martial Arts":{
+                    "type": "palladium:dual_wielding",
+                    "icon": "minecraft:golden_apple",
+                    "title": "Martial Arts",
+                    "bar_color": "red",
+                    "hidden": false,
+                    "hidden_in_bar": false,
+                    "list_index": -1,
+                    "gui_position": [-3.5, -0.5],
+                    "description": "Allows use of both hands!",
+                    "conditions": {
+                        "enabling": [],
+                        "unlocking": []
+                    }
+               
+        },            
+        "Defence I": {
+            "type": "palladium:attribute_modifier",
+            "description": "Increases defence.",
+            "attribute": "minecraft:generic.armor",
+            "icon": "minecraft:iron_chestplate",
+            "operation": 0,
+            "amount": 3.0,
+            "uuid": "d5195501-5975-4cce-a9f3-2cf2c9383573",
+            "gui_position": [-4, 0.5]
+        },
+        "Defence II":{
+            "type": "palladium:attribute_modifier",
+            "description": "Increases defence further.",
+            "attribute": "minecraft:generic.armor",
+            "icon": "minecraft:iron_chestplate",
+            "operation": 0,
+            "amount": 3.0,
+            "uuid": "d5195501-5975-4cce-a9f3-2cf2c9383573",
+            "gui_position": [-4, 1]
+        },
+        "Defence III":{
+            "type": "palladium:attribute_modifier",
+            "description": "Increases defence even further.",
+            "attribute": "minecraft:generic.armor",
+            "icon": "minecraft:iron_chestplate",
+            "operation": 0,
+            "amount": 4.0,
+            "uuid": "d5195501-5975-4cce-a9f3-2cf2c9383573",
+            "gui_position": [-4, 1.5]
+        },
+        "9 Lives Curse":{
+            "type": "palladium:healing",
+            "icon": "minecraft:enchanted_golden_apple",
+            "title": "9 Lives Curse",
+            "bar_color": "red",
+            "hidden": false,
+            "hidden_in_bar": false,
+            "list_index": -1,
+            "gui_position": [-3.5, 0],
+            "gui_frame_type": "task",
+            "description": "Grants one extra life and passively restores health.",
+            "frequency": 20,
+            "amount": 3,
+            "conditions": {
+                "enabling": [],
+                "unlocking": []
+            }
+        }
+    }
+}
