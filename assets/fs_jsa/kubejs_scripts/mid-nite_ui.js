@@ -52,7 +52,7 @@ PalladiumEvents.registerGuiOverlays((event) => {
             poseStack.pose().popPose();
 
             let guiScale = minecraft.options.guiScale().get();
-            if (guiScale === 0) guiScale = 4; // Auto scale fallback
+            if (guiScale === 0) guiScale = 4;
             let textScaleFactor = 4.0 / guiScale;
 
             poseStack.pose().pushPose();
@@ -73,10 +73,18 @@ PalladiumEvents.registerGuiOverlays((event) => {
             let lightColor = blockLight < 5 ? 0x55FF55 : 0xFF5555;
             let timeColor = isNightTime ? 0x55FF55 : 0xFF5555;
 
+            guiUtil.drawString(poseStack, Component.literal("ENVIRONMENT:").bold(true), envX + 1, envY + 1, 0x000000);
             guiUtil.drawString(poseStack, Component.literal("ENVIRONMENT:").bold(true), envX, envY, 0x4F7F4F);
+
+            guiUtil.drawString(poseStack, Component.literal("- Block Light: "), envX + 11, envY + 11, 0x000000);
             guiUtil.drawString(poseStack, Component.literal("- Block Light: "), envX + 10, envY + 10, 0xAAAAAA);
+
+            guiUtil.drawString(poseStack, Component.literal(String(blockLight)), envX + 79, envY + 11, 0x000000);
             guiUtil.drawString(poseStack, Component.literal(String(blockLight)), envX + 78, envY + 10, lightColor);
+
+            guiUtil.drawString(poseStack, Component.literal(`- Time: `), envX + 11, envY + 21, 0x000000);
             guiUtil.drawString(poseStack, Component.literal(`- Time: `), envX + 10, envY + 20, 0xAAAAAA);
+            guiUtil.drawString(poseStack, Component.literal(`${isNightTime ? "Night" : "Day"}`), envX + 46, envY + 21, 0x000000);
             guiUtil.drawString(poseStack, Component.literal(`${isNightTime ? "Night" : "Day"}`), envX + 45, envY + 20, timeColor);
 
             let hitResult = minecraft.hitResult;
@@ -93,16 +101,20 @@ PalladiumEvents.registerGuiOverlays((event) => {
                     let textX = targetWidth / 2 + 15;
                     let textY = targetHeight - 135;
 
+                    guiUtil.drawString(poseStack, Component.literal(name).bold(true), textX + 1, textY + 1, 0x000000);
                     guiUtil.drawString(poseStack, Component.literal(name).bold(true), textX, textY, 0x4F7F4F);
+                    guiUtil.drawString(poseStack, Component.literal(`- HP: ${health}/${maxHealth}`), textX + 11, textY + 11, 0x000000);
                     guiUtil.drawString(poseStack, Component.literal(`- HP: ${health}/${maxHealth}`), textX + 10, textY + 10, 0xAAAAAA);
+                    guiUtil.drawString(poseStack, Component.literal(`- Armor: ${armor}`), textX + 11, textY + 21, 0x000000);
                     guiUtil.drawString(poseStack, Component.literal(`- Armor: ${armor}`), textX + 10, textY + 20, 0xAAAAAA);
 
                     try {
                         let powers = palladium.powers.getPowerIds(target);
-                        if (powers) {
+                        if (powers && powers.size() > 0 && !POWER_BLACKLIST.includes(powers.iterator().next().toString())) {
                             let rightX = targetWidth - 135;
                             let rightY = targetHeight - 135;
 
+                            guiUtil.drawString(poseStack, Component.literal("POWERS:").bold(true), rightX + 1, rightY + 1, 0x000000);
                             guiUtil.drawString(poseStack, Component.literal("POWERS:").bold(true), rightX, rightY, 0x4F7F4F);
                             
                             let count = 0;
@@ -112,6 +124,7 @@ PalladiumEvents.registerGuiOverlays((event) => {
                                 if (!POWER_BLACKLIST.includes(idString)) {
                                     let displayName = formatPowerName(idString);
                                     
+                                    guiUtil.drawString(poseStack, Component.literal(`- ${displayName}`), rightX + 6, rightY + 13 + (count * 10), 0x000000);
                                     guiUtil.drawString(poseStack, Component.literal(`- ${displayName}`), rightX + 5, rightY + 12 + (count * 10), 0xAAAAAA);
                                     count++;
                                 }
