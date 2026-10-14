@@ -1,0 +1,29 @@
+{
+    "targets": [
+        "swap",
+        "history"
+    ],
+    "passes": [
+        {
+            "name": "fs_jsa:blindness",
+            "intarget": "minecraft:main",
+            "outtarget": "swap",
+            "auxtargets": [
+                {
+                    "name": "PrevSampler",
+                    "id": "history"
+                }
+            ]
+        },
+        {
+            "name": "blit",
+            "intarget": "swap",
+            "outtarget": "minecraft:main"
+        },
+        {
+            "name": "blit",
+            "intarget": "swap",
+            "outtarget": "history"
+        }
+    ]
+}

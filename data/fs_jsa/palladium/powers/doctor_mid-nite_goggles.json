@@ -1,0 +1,19 @@
+{
+    "name": "Aim Test",
+    "icon": "minecraft:gold_ingot",
+    "abilities": {
+        "goggle_shader": {
+            "type": "palladium:shader_effect",
+            "icon": "minecraft:blaze_rod",
+            "title": "null",
+            "bar_color": "light_gray",
+            "hidden": true,
+            "hidden_in_bar": true,
+            "list_index": -1,
+            "gui_position": "null",
+            "gui_frame_type": "task",
+            "description": "null",
+            "shader": "fs_jsa:shaders/post/green.json"
+        }
+    }
+}

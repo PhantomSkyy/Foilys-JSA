@@ -1,0 +1,97 @@
+{
+    "name": "Blindness",
+    "icon": "minecraft:gold_ingot",
+    "abilities": {
+        "blindness": {
+            "type": "palladium:shader_effect",
+            "icon": "minecraft:blaze_rod",
+            "title": "null",
+            "bar_color": "light_gray",
+            "hidden": true,
+            "hidden_in_bar": true,
+            "list_index": -1,
+            "gui_position": "null",
+            "gui_frame_type": "task",
+            "description": "null",
+            "shader": "fs_jsa:shaders/post/blindness.json",
+            "conditions": {
+                "unlocking": [
+                    {
+                        "type": "palladium:and",
+                        "conditions": [
+                            {
+                                "type": "palladium:not",
+                                "conditions": [
+                                    {
+                                        "type": "palladium:item_in_slot",
+                                        "item": {
+                                            "item": "fs_jsa:doctor_mid-nite_helmet"
+                                        },
+                                        "slot": "head"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "palladium:or",
+                                "conditions": [
+                                    {
+                                        "type": "palladium:day"
+                                    },
+                                    {
+                                        "type": "palladium:brightness_at_position",
+                                        "min_brightness": 5,
+                                        "max_brightness": 16
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "night_vision": {
+            "type": "palladium:command",
+            "icon": "minecraft:command_block",
+            "title": "null",
+            "bar_color": "light_gray",
+            "hidden": false,
+            "hidden_in_bar": false,
+            "list_index": -1,
+            "gui_position": "null",
+            "gui_frame_type": "task",
+            "description": "null",
+            "first_tick_commands": [
+                "effect give @s minecraft:night_vision infinite 1 true"
+            ],
+            "last_tick_commands": [
+                "effect clear @s minecraft:night_vision"
+            ],
+            "commands": [
+                "effect clear @s minecraft:blindness",
+                "effect clear @s minecraft:darkness"
+            ],
+            "enabling": [
+                {
+                    "type": "palladium:or",
+                    "conditions": [
+                        {
+                            "type": "palladium:brightness_at_position",
+                            "min_brightness": 0,
+                            "max_brightness": 5
+                        },
+                        {
+                            "type": "palladium:night"
+                        },
+                        {
+                            "type": "palladium:item_in_slot",
+                            "item": {
+                                "item": "fs_jsa:doctor_mid-nite_helmet"
+                            },
+                            "slot": "head"
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
