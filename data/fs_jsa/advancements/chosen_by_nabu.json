@@ -1,0 +1,45 @@
+{
+    "display": {
+        "icon": {
+            "item": "fs_jsa:doctor_fate_helmet"
+        },
+        "title": {
+            "text": "Lord of Order",
+            "color": "gold",
+            "bold": true
+        },
+        "description": {
+            "text": "Answer Nabu's whisper and don the Helm of Fate."
+        },
+        "frame": "challenge",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": true
+    },
+    "parent": "minecraft:story/root",
+    "criteria": {
+        "wear_helm": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "player": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "entity": "this",
+                        "predicate": {
+                            "equipment": {
+                                "head": {
+                                    "items": [
+                                        "fs_jsa:doctor_fate_helmet"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "rewards": {
+        "function": "fs_jsa:grant_nabu_chosen"
+    }
+}

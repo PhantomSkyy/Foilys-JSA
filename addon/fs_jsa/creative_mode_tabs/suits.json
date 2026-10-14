@@ -16,6 +16,10 @@
         "fs_jsa:doctor_mid-nite_helmet",
         "fs_jsa:doctor_mid-nite_chestplate",
         "fs_jsa:doctor_mid-nite_leggings",
-        "fs_jsa:doctor_mid-nite_boots"
+        "fs_jsa:doctor_mid-nite_boots",
+        "fs_jsa:doctor_fate_helmet",
+        "fs_jsa:doctor_fate_chestplate",
+        "fs_jsa:doctor_fate_leggings",
+        "fs_jsa:doctor_fate_boots"
     ]
 }

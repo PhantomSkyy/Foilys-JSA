@@ -1,5 +1,34 @@
 {
     "textures": "fs_jsa:textures/suits/doctor_mid-nite/chestplate.png",
     "hide_second_layer": true,
-    "model_layers": "palladium:humanoid#tight_suit"
+    "model_layers": "palladium:humanoid#tight_suit",
+    "render_layers": {
+        "type": "palladium:compound",
+        "layers": [
+            {
+                "model_layer": "fs_jsa:cape_top#cape",
+                "texture": "fs_jsa:textures/cape/midnite_green/cape_top.png"
+            },
+            {
+                "model_layer": "fs_jsa:humanoid#cape",
+                "model_type": "palladium:caped_humanoid",
+                "hidden_body_parts": "cape",
+                "texture": {
+                    "base": "fs_jsa:textures/cape/midnite_green/#STAGE.png",
+                    "transformers": [],
+                    "variables": {
+                        "STAGE": {
+                            "type": "palladium:cape",
+                            "bobbing": false,
+                            "subtract": 9,
+                            "divide": 10,
+                            "max": 5,
+                            "min": 0,
+                            "round": "to_int"
+                        }
+                    }
+                }
+            }
+        ]
+    }
 }

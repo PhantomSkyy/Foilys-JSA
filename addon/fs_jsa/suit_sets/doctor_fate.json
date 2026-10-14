@@ -1,0 +1,24 @@
+{
+    "armor_material": "minecraft:diamond",
+    "tooltip": [
+        "Golden Age Member"
+    ],
+    "chest": {
+        "item_name": "doctor_fate_chestplate",
+        "armor_renderer": "fs_jsa:doctor_fate/chestplate"
+    },
+    "legs": {
+        "item_name": "doctor_fate_leggings",
+        "armor_renderer": "fs_jsa:doctor_fate/leggings"
+    },
+    "feet": {
+        "item_name": "doctor_fate_boots",
+        "armor_renderer": "fs_jsa:doctor_fate/boots"
+    },
+    "head": {
+        "item_name": "doctor_fate_helmet",
+        "openable": true,
+        "opening_time": 1,
+        "armor_renderer": "fs_jsa:doctor_fate/helmet"
+    }
+}
