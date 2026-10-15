@@ -3,7 +3,6 @@ const LivingEntity = Java.loadClass("net.minecraft.world.entity.LivingEntity");
 const Monster = Java.loadClass("net.minecraft.world.entity.monster.Monster");
 const LightLayer = Java.loadClass("net.minecraft.world.level.LightLayer");
 const BuiltInRegistries = Java.loadClass("net.minecraft.core.registries.BuiltInRegistries");
-const EquipmentSlot = Java.loadClass('net.minecraft.world.entity.EquipmentSlot');
 
 const POWER_BLACKLIST = [
     'fs_jsa:doctor_mid-nite_goggles',
@@ -47,20 +46,22 @@ function renderEntityRadar(poseStack, player, entities, centerX, centerY) {
     let cosYaw = (look && typeof look.z === 'number') ? look.z : 1.0;
     let sinYaw = (look && typeof look.x === 'number') ? look.x : 0.0;
     
-    let radarRadiusPx = 25;
-    let textureWidth = 64;
-    let textureHeight = 64;
+    let radarRadiusPx = 22;
+    let textureWidth = 54;
+    let textureHeight = 54;
 
-    poseStack.pose().pushPose();
-    poseStack.blit(
-        'fs_jsa:textures/ui/blip_radar.png',
-        centerX - (textureWidth / 2 - 3), 
-        centerY - (textureHeight / 2 - 4), 
-        0, 0, 
-        textureWidth, textureHeight, 
-        textureWidth, textureHeight
-    );
-    poseStack.pose().popPose();
+    try {
+        poseStack.pose().pushPose();
+        poseStack.blit(
+            'fs_jsa:textures/ui/blip_radar.png',
+            centerX - (textureWidth / 2), 
+            centerY - (textureHeight / 2), 
+            0, 0, 
+            textureWidth, textureHeight, 
+            textureWidth, textureHeight
+        );
+        poseStack.pose().popPose();
+    } catch (e) {}
 
     guiUtil.drawString(poseStack, Component.literal("+"), centerX + 1, centerY + 1, 0x000000);
     guiUtil.drawString(poseStack, Component.literal("+"), centerX, centerY, 0x00FF00);
@@ -103,10 +104,7 @@ ClientEvents.tick(event => {
 
     powerHoldTickTimer++;
 
-    let headItem = player.getItemBySlot(EquipmentSlot.HEAD);
-    let wearingHelm = headItem && headItem.id === 'fs_jsa:doctor_mid-nite_helmet';
-
-    if (!wearingHelm) {
+    if (!superpowerUtil.hasSuperpower(player, 'fs_jsa:doctor_mid-nite_goggles')) {
         cachedOres = [];
         cachedEntities = [];
         lastOresSignature = "";
@@ -243,35 +241,20 @@ PalladiumEvents.registerGuiOverlays((event) => {
             const player = minecraft.player;
             if (!player) return;
 
-            let headItem = player.getItemBySlot(EquipmentSlot.HEAD);
-            let wearingHelm = headItem && headItem.id === 'fs_jsa:doctor_mid-nite_helmet';
-
-            if (!wearingHelm) {
+            if (!superpowerUtil.hasSuperpower(player, 'fs_jsa:doctor_mid-nite_goggles')) {
                 return;
             }
 
-            poseStack.pose().pushPose();
-            let scaleX = screenWidth / 128;
-            let scaleY = screenHeight / 64;
-            poseStack.pose().scale(scaleX, scaleY, 1.0);
-
-            poseStack.blit(
-                'fs_jsa:textures/ui/mid-nite_goggles.png', 
-                0, 0, 0, 0, 
-                128.5, 64.5, 
-                128, 64
-            );
-            poseStack.pose().popPose();
-
-            let guiScale = minecraft.options.guiScale().get();
-            if (guiScale === 0) guiScale = 4;
-            let textScaleFactor = 4.0 / guiScale;
-
-            poseStack.pose().pushPose();
-            poseStack.pose().scale(textScaleFactor, textScaleFactor, 1.0);
-
-            let targetWidth = screenWidth / textScaleFactor;
-            let targetHeight = screenHeight / textScaleFactor;
+            try {
+                poseStack.pose().pushPose();
+                poseStack.blit(
+                    'fs_jsa:textures/ui/mid-nite_goggles.png', 
+                    0, 0, 0, 0, 
+                    screenWidth, screenHeight, 
+                    screenWidth, screenHeight
+                );
+                poseStack.pose().popPose();
+            } catch (e) {}
 
             let blockPos = player.blockPosition();
             let rawLight = player.level.getBrightness(LightLayer.BLOCK, blockPos);
@@ -281,8 +264,8 @@ PalladiumEvents.registerGuiOverlays((event) => {
             let worldTime = (isNaN(rawTime) || !isFinite(rawTime)) ? 0 : Number(rawTime % 24000);
             let isNightTime = worldTime >= 12000 && worldTime < 23460;
 
-            let envX = 80;
-            let envY = targetHeight - 165;
+            let envX = screenWidth - 170;
+            let envY = 35;
 
             let lightColor = blockLight < 5 ? 0x55FF55 : 0xFF5555;
             let timeColor = isNightTime ? 0x55FF55 : 0xFF5555;
@@ -336,8 +319,8 @@ PalladiumEvents.registerGuiOverlays((event) => {
             }
 
             if (cachedEntities.length > 0) {
-                let radarCenterX = targetWidth - 45;
-                let radarCenterY = envY + 25;
+                let radarCenterX = envX + 85;
+                let radarCenterY = envY + 110;
                 renderEntityRadar(poseStack, player, cachedEntities, radarCenterX, radarCenterY);
             }
 
@@ -398,12 +381,11 @@ PalladiumEvents.registerGuiOverlays((event) => {
                                     targetPowerStr = `- Power: ${formatPowerName(currentPowerKey.toString())}`;
                                 }
                             }
-                        } catch (e) {
-                        }
+                        } catch (e) {}
                     }
 
-                    let textX = targetWidth / 2 + 15;
-                    let textY = targetHeight - 135;
+                    let textX = screenWidth / 2 - 100;
+                    let textY = envY;
 
                     guiUtil.drawString(poseStack, Component.literal(entityName).bold(true), textX + 1, textY + 1, 0x000000);
                     guiUtil.drawString(poseStack, Component.literal(entityName).bold(true), textX, textY, 0x4F7F4F);
@@ -423,8 +405,6 @@ PalladiumEvents.registerGuiOverlays((event) => {
                 lastTargetEntityId = -1;
                 powerHoldTickTimer = 0;
             }
-
-            poseStack.pose().popPose();
         }
     );
 });
