@@ -1,19 +1,24 @@
 const Component = Java.loadClass("net.minecraft.network.chat.Component");
 const LivingEntity = Java.loadClass("net.minecraft.world.entity.LivingEntity");
+const Monster = Java.loadClass("net.minecraft.world.entity.monster.Monster");
 const LightLayer = Java.loadClass("net.minecraft.world.level.LightLayer");
 const BuiltInRegistries = Java.loadClass("net.minecraft.core.registries.BuiltInRegistries");
+const EquipmentSlot = Java.loadClass('net.minecraft.world.entity.EquipmentSlot');
 
 const POWER_BLACKLIST = [
     'fs_jsa:doctor_mid-nite_goggles',
 ];
 
 let cachedOres = [];
+let cachedEntities = [];
 let scanTimer = 0;
 let lastOresSignature = "";
 
 let powerHoldTickTimer = 0;
 let powerIndex = 0;
 let lastTargetEntityId = -1;
+
+const SCAN_RADIUS_BLOCKS = 16;
 
 function formatPowerName(idString) {
     let str = String(idString);
@@ -29,6 +34,57 @@ function formatPowerName(idString) {
         }
     }
     return words.join(" ");
+}
+
+function renderEntityRadar(poseStack, player, entities, centerX, centerY) {
+    let look = null;
+    try {
+        if (typeof player.getLookAngle === 'function') {
+            look = player.getLookAngle();
+        }
+    } catch (e) {}
+
+    let cosYaw = (look && typeof look.z === 'number') ? look.z : 1.0;
+    let sinYaw = (look && typeof look.x === 'number') ? look.x : 0.0;
+    
+    let radarRadiusPx = 25;
+    let textureWidth = 64;
+    let textureHeight = 64;
+
+    poseStack.pose().pushPose();
+    poseStack.blit(
+        'fs_jsa:textures/ui/blip_radar.png',
+        centerX - (textureWidth / 2 - 3), 
+        centerY - (textureHeight / 2 - 4), 
+        0, 0, 
+        textureWidth, textureHeight, 
+        textureWidth, textureHeight
+    );
+    poseStack.pose().popPose();
+
+    guiUtil.drawString(poseStack, Component.literal("+"), centerX + 1, centerY + 1, 0x000000);
+    guiUtil.drawString(poseStack, Component.literal("+"), centerX, centerY, 0x00FF00);
+
+    entities.forEach(ent => {
+        let dx = ent.x - player.getX();
+        let dz = ent.z - player.getZ();
+
+        let rotX = dx * cosYaw + dz * sinYaw;
+        let rotZ = -dx * sinYaw + dz * cosYaw;
+
+        let blipX = centerX + Math.round((rotX / SCAN_RADIUS_BLOCKS) * radarRadiusPx);
+        let blipY = centerY + Math.round((rotZ / SCAN_RADIUS_BLOCKS) * radarRadiusPx);
+
+        let blipColor = 0x55FF55;
+        if (ent.isHostile) {
+            blipColor = 0xFF5555;
+        } else if (ent.isPlayer) {
+            blipColor = 0x55FFFF;
+        }
+
+        guiUtil.drawString(poseStack, Component.literal("•"), blipX + 1, blipY + 1, 0x000000);
+        guiUtil.drawString(poseStack, Component.literal("•"), blipX, blipY, blipColor);
+    });
 }
 
 function isHoldingPickaxe(player) {
@@ -47,71 +103,136 @@ ClientEvents.tick(event => {
 
     powerHoldTickTimer++;
 
-    if (!superpowerUtil.hasSuperpower(player, 'fs_jsa:doctor_mid-nite_goggles') || !isHoldingPickaxe(player)) {
+    let headItem = player.getItemBySlot(EquipmentSlot.HEAD);
+    let wearingHelm = headItem && headItem.id === 'fs_jsa:doctor_mid-nite_helmet';
+
+    if (!wearingHelm) {
         cachedOres = [];
+        cachedEntities = [];
         lastOresSignature = "";
         return;
     }
 
     scanTimer++;
-    if (scanTimer < 20) return;
+    if (scanTimer < 10) return;
     scanTimer = 0;
 
     let level = player.level;
     let pPos = player.blockPosition();
     if (!pPos) return;
 
-    let radius = 8;
-    let foundOres = [];
+    let aabb = player.getBoundingBox().inflate(SCAN_RADIUS_BLOCKS);
+    let rawEntities = level.getEntities(player, aabb, e => e instanceof LivingEntity);
+    let foundEntities = [];
 
-    for (let x = -radius; x <= radius; x++) {
-        for (let y = -radius; y <= radius; y++) {
-            for (let z = -radius; z <= radius; z++) {
-                let testPos = pPos.offset(Number(x), Number(y), Number(z));
-                if (!testPos) continue;
+    if (rawEntities) {
+        let px = player.getX();
+        let py = player.getY();
+        let pz = player.getZ();
 
-                let state = level.getBlockState(testPos);
-                if (state && !state.isAir()) {
-                    let blockObj = state.getBlock();
-                    if (!blockObj) continue;
-                    
-                    let idRegistry = blockObj.arch$registryName();
-                    if (!idRegistry) continue;
-                    
-                    let idString = idRegistry.toString();
+        rawEntities.forEach(ent => {
+            let edx = ent.getX() - px;
+            let edy = ent.getY() - py;
+            let edz = ent.getZ() - pz;
+            let distSq = (edx * edx) + (edy * edy) + (edz * edz);
 
-                    if (idString.includes('ore') && !idString.includes('deepslate_ore_storage')) {
-                        let dx = Number(x);
-                        let dy = Number(y);
-                        let dz = Number(z);
-                        let rawDist = Math.sqrt((dx * dx) + (dy * dy) + (dz * dz));
-                        let dist = (isNaN(rawDist) || !isFinite(rawDist)) ? 0 : Math.round(rawDist);
+            if (distSq <= (SCAN_RADIUS_BLOCKS * SCAN_RADIUS_BLOCKS)) {
+                let isPlayer = ent.isPlayer();
+                
+                let isHostile = (ent instanceof Monster) || 
+                                 (typeof ent.isAggressive === 'function' && ent.isAggressive());
+                
+                if (!isHostile && ent.type) {
+                    try {
+                        let keyObj = BuiltInRegistries.ENTITY_TYPE.getKey(ent.type);
+                        if (keyObj) {
+                            let typeKey = keyObj.toString().toLowerCase();
+                            if (typeKey.includes('zombie') || typeKey.includes('skeleton') || 
+                                typeKey.includes('creeper') || typeKey.includes('spider') || 
+                                typeKey.includes('enderman') || typeKey.includes('witch') || 
+                                typeKey.includes('slime') || typeKey.includes('phantom') || 
+                                typeKey.includes('drowned') || typeKey.includes('husk') || 
+                                typeKey.includes('stray') || typeKey.includes('pillager') || 
+                                typeKey.includes('vindicator') || typeKey.includes('evoker') || 
+                                typeKey.includes('ravager') || typeKey.includes('hoglin') || 
+                                typeKey.includes('piglin') || typeKey.includes('ghast') || 
+                                typeKey.includes('blaze') || typeKey.includes('magma_cube') || 
+                                typeKey.includes('shulker') || typeKey.includes('guardian') ||
+                                typeKey.includes('wither') || typeKey.includes('warden')) {
+                                isHostile = true;
+                            }
+                        }
+                    } catch (e) {}
+                }
+
+                foundEntities.push({
+                    x: ent.getX(),
+                    y: ent.getY(),
+                    z: ent.getZ(),
+                    isPlayer: isPlayer,
+                    isHostile: isHostile
+                });
+            }
+        });
+    }
+    cachedEntities = foundEntities;
+
+    if (isHoldingPickaxe(player)) {
+        let radius = 8;
+        let foundOres = [];
+
+        for (let x = -radius; x <= radius; x++) {
+            for (let y = -radius; y <= radius; y++) {
+                for (let z = -radius; z <= radius; z++) {
+                    let testPos = pPos.offset(Number(x), Number(y), Number(z));
+                    if (!testPos) continue;
+
+                    let state = level.getBlockState(testPos);
+                    if (state && !state.isAir()) {
+                        let blockObj = state.getBlock();
+                        if (!blockObj) continue;
                         
-                        let regName = blockObj.arch$registryName();
-                        let fullName = regName ? formatPowerName(regName.toString()) : "Unknown Ore";
+                        let idRegistry = blockObj.arch$registryName();
+                        if (!idRegistry) continue;
                         
-                        let shortName = fullName
-                            .replace(/Deepslate /g, "Deep ")
-                            .replace(/ Ore/g, "")
-                            .trim();
+                        let idString = idRegistry.toString();
 
-                        foundOres.push({
-                            name: shortName,
-                            dist: Number(dist)
-                        });
+                        if (idString.includes('ore') && !idString.includes('deepslate_ore_storage')) {
+                            let dx = Number(x);
+                            let dy = Number(y);
+                            let dz = Number(z);
+                            let rawDist = Math.sqrt((dx * dx) + (dy * dy) + (dz * dz));
+                            let dist = (isNaN(rawDist) || !isFinite(rawDist)) ? 0 : Math.round(rawDist);
+                            
+                            let regName = blockObj.arch$registryName();
+                            let fullName = regName ? formatPowerName(regName.toString()) : "Unknown Ore";
+                            
+                            let shortName = fullName
+                                .replace(/Deepslate /g, "Deep ")
+                                .replace(/ Ore/g, "")
+                                .trim();
+
+                            foundOres.push({
+                                name: shortName,
+                                dist: Number(dist)
+                            });
+                        }
                     }
                 }
             }
         }
-    }
 
-    foundOres.sort((a, b) => a.dist - b.dist);
-    let newOres = foundOres.slice(0, 5);
-    
-    let newSig = newOres.map(o => `${o.name}:${o.dist}`).join("|");
-    if (newSig !== lastOresSignature) {
-        lastOresSignature = newSig;
-        cachedOres = newOres;
+        foundOres.sort((a, b) => a.dist - b.dist);
+        let newOres = foundOres.slice(0, 5);
+        
+        let newSig = newOres.map(o => `${o.name}:${o.dist}`).join("|");
+        if (newSig !== lastOresSignature) {
+            lastOresSignature = newSig;
+            cachedOres = newOres;
+        }
+    } else {
+        cachedOres = [];
+        lastOresSignature = "";
     }
 });
 
@@ -122,7 +243,10 @@ PalladiumEvents.registerGuiOverlays((event) => {
             const player = minecraft.player;
             if (!player) return;
 
-            if (!superpowerUtil.hasSuperpower(player, 'fs_jsa:doctor_mid-nite_goggles')) {
+            let headItem = player.getItemBySlot(EquipmentSlot.HEAD);
+            let wearingHelm = headItem && headItem.id === 'fs_jsa:doctor_mid-nite_helmet';
+
+            if (!wearingHelm) {
                 return;
             }
 
@@ -198,7 +322,6 @@ PalladiumEvents.registerGuiOverlays((event) => {
             }
 
             if (isHoldingPickaxe(player) && cachedOres.length > 0) {
-
                 let oreTitleText = "ORE RADAR:";
                 guiUtil.drawString(poseStack, Component.literal(oreTitleText).bold(true), envX + 1, envY + 41, 0x000000);
                 guiUtil.drawString(poseStack, Component.literal(oreTitleText).bold(true), envX, envY + 40, 0x4F7F4F);
@@ -210,6 +333,12 @@ PalladiumEvents.registerGuiOverlays((event) => {
                     guiUtil.drawString(poseStack, Component.literal(fullText), envX + 11, envY + 51 + (index * 10), 0x000000);
                     guiUtil.drawString(poseStack, Component.literal(fullText), envX + 10, envY + 50 + (index * 10), 0x55FF55);
                 });
+            }
+
+            if (cachedEntities.length > 0) {
+                let radarCenterX = targetWidth - 45;
+                let radarCenterY = envY + 25;
+                renderEntityRadar(poseStack, player, cachedEntities, radarCenterX, radarCenterY);
             }
 
             if (hitResult && hitResult.getType() && hitResult.getType().name() === 'ENTITY') {
@@ -251,24 +380,26 @@ PalladiumEvents.registerGuiOverlays((event) => {
                     let armorStr = `- Armor: ${armor}`;
                     let targetPowerStr = "";
 
-                    try {
-                        let powers = palladium.powers.getPowerIds ? palladium.powers.getPowerIds(target) : null;
-                        if (!powers && palladium && palladium.powers) {
-                            powers = palladium.powers.getPowerIds(target);
-                        }
-                        
-                        if (powers && powers.length > 0) {
-                            if (powerHoldTickTimer >= 60) {
-                                powerHoldTickTimer = 0;
-                                powerIndex = (powerIndex + 1) % powers.length;
+                    if (!isHoldingPickaxe(player)) {
+                        try {
+                            let powers = superpowerUtil.hasSuperpower ? superpowerUtil.getPowers(target) : null;
+                            if (!powers && palladium && palladium.powers) {
+                                powers = palladium.powers.getPowerIds(target);
                             }
+                            
+                            if (powers && powers.length > 0) {
+                                if (powerHoldTickTimer >= 60) {
+                                    powerHoldTickTimer = 0;
+                                    powerIndex = (powerIndex + 1) % powers.length;
+                                }
 
-                            let currentPowerKey = powers[powerIndex];
-                            if (currentPowerKey) {
-                                targetPowerStr = `- Power: ${formatPowerName(currentPowerKey.toString())}`;
+                                let currentPowerKey = powers[powerIndex];
+                                if (currentPowerKey) {
+                                    targetPowerStr = `- Power: ${formatPowerName(currentPowerKey.toString())}`;
+                                }
                             }
+                        } catch (e) {
                         }
-                    } catch (e) {
                     }
 
                     let textX = targetWidth / 2 + 15;
