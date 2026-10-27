@@ -1,0 +1,59 @@
+{
+    "type": "palladium:suit_set_tailoring",
+    "suit_set": "fs_jsa:flash",
+    "ingredients": [
+        {
+            "ingredient": {
+                "item": "fs_jsa:speedster_logo"
+            },
+            "count": 1
+        },
+        {
+            "ingredient": {
+                "item": "minecraft:iron_helmet"
+            },
+            "count": 1
+        },
+        {
+            "ingredient": {
+                "item": "minecraft:iron_ingot"
+            },
+            "count": 2
+        },
+        {
+            "ingredient": {
+                "item": "minecraft:gold_nugget"
+            },
+            "count": 4
+        },
+        {
+            "ingredient": {
+                "item": "palladium:red_fabric"
+            },
+            "count": 16
+        },
+        {
+            "ingredient": {
+                "item": "minecraft:leather_chestplate"
+            },
+            "count": 1
+        },
+        {
+            "ingredient": {
+                "item": "minecraft:leather_leggings"
+            },
+            "count": 1
+        },
+        {
+            "ingredient": {
+                "item": "minecraft:leather_boots"
+            },
+            "count": 1
+        }
+    ],
+    "tool": {
+        "item": "minecraft:shears"
+    },
+    "tool_icon": "palladium:item/empty_tool_slot_shears",
+    "category": "fs_jsa:jsa_suits"
+}

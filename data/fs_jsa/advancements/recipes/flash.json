@@ -1,0 +1,16 @@
+{
+    "parent": "minecraft:recipes/root",
+    "rewards": {
+        "recipes": [
+            "fs_jsa:flash"
+        ]
+    },
+    "criteria": {
+        "has_ingredient": {
+            "trigger": "minecraft:recipe_crafted",
+            "conditions": {
+                "recipe_id": "fs_jsa:speedster_logo"
+            }
+        }
+    }
+}

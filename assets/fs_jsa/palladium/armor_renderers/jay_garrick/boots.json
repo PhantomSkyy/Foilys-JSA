@@ -1,0 +1,11 @@
+{
+    "textures": "fs_jsa:textures/suits/jay_garrick/boots.png",
+    "hide_second_layer": true,
+    "model_layers": "palladium:humanoid#tight_suit",
+    "render_layers": [
+        {
+            "model_layer": "fs_jsa:boots#jay_garrick",
+            "texture": "fs_jsa:textures/suits/jay_garrick/helmet.png"
+        }
+    ]
+}

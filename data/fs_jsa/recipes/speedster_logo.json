@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "category": "misc",
+    "pattern": [
+        " SY",
+        " Y ",
+        "YS "
+    ],
+    "key": {
+        "S": {
+            "item": "minecraft:string"
+        },
+        "Y": {
+            "item": "palladium:yellow_fabric"
+        }
+    },
+    "result": {
+        "item": "fs_jsa:speedster_logo",
+        "count": 1
+    }
+}

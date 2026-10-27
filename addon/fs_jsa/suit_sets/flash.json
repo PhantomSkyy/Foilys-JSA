@@ -1,0 +1,24 @@
+{
+    "armor_material": "minecraft:diamond",
+    "tooltip": [
+        "Golden Age Member"
+    ],
+    "chest": {
+        "item_name": "jay_garrick_chestplate",
+        "armor_renderer": "fs_jsa:jay_garrick/chestplate"
+    },
+    "legs": {
+        "item_name": "jay_garrick_leggings",
+        "armor_renderer": "fs_jsa:jay_garrick/leggings"
+    },
+    "feet": {
+        "item_name": "jay_garrick_boots",
+        "armor_renderer": "fs_jsa:jay_garrick/boots"
+    },
+    "head": {
+        "item_name": "jay_garrick_helmet",
+        "openable": true,
+        "opening_time": 1,
+        "armor_renderer": "fs_jsa:jay_garrick/helmet"
+    }
+}
